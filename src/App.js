@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Movies from './components/Movies';
+import Favorite from './components/Favorite';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      moviesInfo: [],
+      myFavorite:[],
+    }
+    
+  }
+
+  componentDidMount() {
+    fetch(`https://raw.githubusercontent.com/wildcodeschoolparis/datas/master/movies.json`)
+      .then(res=> res.json())
+      .then(data => this.setState({ 
+        moviesInfo: data.movies,
+        myFavorite: [],
+       })
+       )
+
+  };
+
+  addToFavoriteHandler = (clickedMovie) => {
+    // console.log('clicked')
+
+    this.setState({ favoriteInfo: [... this.state.favoriteInfo, clickedMovie]})
+  }
+ 
+
+  render() {
+    const {moviesInfo, favoriteInfo} = this.state
+    return (
+      <div className="App">
+        <Movies addToFavorite={this.addToFavoriteHandler}moviesInfo={moviesInfo}/>
+        <Favorite favoriteInfo={favoriteInfo} />
+      </div>
+    );
+
+  }
+
 }
 
 export default App;
